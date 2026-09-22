@@ -1,0 +1,42 @@
+{
+    "total_tests": 7,
+    "passed": 7,
+    "failed": 0,
+    "tests": [
+        {
+            "name": "Prompt Injection Detection",
+            "status": "PASS",
+            "passed": true
+        },
+        {
+            "name": "Jailbreak Detection",
+            "status": "PASS",
+            "passed": true
+        },
+        {
+            "name": "PII Detection",
+            "status": "PASS",
+            "passed": true
+        },
+        {
+            "name": "Sensitive Output Detection",
+            "status": "PASS",
+            "passed": true
+        },
+        {
+            "name": "RAG Injection Detection",
+            "status": "PASS",
+            "passed": true
+        },
+        {
+            "name": "Unsafe Tool Blocking",
+            "status": "PASS",
+            "passed": true
+        },
+        {
+            "name": "Safe Calculator Execution",
+            "status": "PASS",
+            "passed": true
+        }
+    ]
+}

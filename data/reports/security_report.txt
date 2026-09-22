@@ -1,0 +1,128 @@
+============================================================
+AI SECURITY LAB - SECURITY REPORT
+============================================================
+
+Generated: 2026-09-23 00:04:43
+
+SUMMARY
+------------------------------------------------------------
+Total Security Events: 100
+
+EVENT COUNTS
+------------------------------------------------------------
+ALLOWED: 11
+INPUT_BLOCKED: 15
+RAG_DOCUMENT_RETRIEVED: 1
+RATE_LIMITED: 34
+TOOL_ALLOWED: 18
+TOOL_BLOCKED: 10
+TOOL_EXECUTED: 4
+TOOL_EXECUTION_BLOCKED: 1
+TOOL_INPUT_BLOCKED: 6
+
+RECENT SECURITY EVENTS
+------------------------------------------------------------
+[2026-09-22 22:49:50] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 22:51:20] ALLOWED | Risk Score: 0 | Risk Level: LOW | Input: What is cybersecurity?
+[2026-09-22 22:54:40] RAG_DOCUMENT_RETRIEVED | Retrieved document: security_notes.txt | Query: What is cybersecurity?
+[2026-09-22 22:55:46] ALLOWED | Risk Score: 0 | Risk Level: LOW | Input: Hello
+[2026-09-22 22:55:46] INPUT_BLOCKED | Message cannot be empty.
+[2026-09-22 22:55:46] INPUT_BLOCKED | Message cannot be empty.
+[2026-09-22 22:55:46] INPUT_BLOCKED | Message cannot be empty.
+[2026-09-22 22:55:47] INPUT_BLOCKED | Message cannot be empty.
+[2026-09-22 22:55:47] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 22:55:47] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 22:55:47] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 22:55:47] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 22:55:47] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 22:55:47] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 22:55:47] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 22:55:47] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 22:59:14] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 22:59:14] TOOL_BLOCKED | Blocked tool: system_command
+[2026-09-22 22:59:14] TOOL_INPUT_BLOCKED | Invalid arguments for tool: calculator
+[2026-09-22 23:00:46] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:00:46] TOOL_BLOCKED | Blocked tool: system_command
+[2026-09-22 23:00:46] TOOL_INPUT_BLOCKED | Invalid arguments for tool: calculator
+[2026-09-22 23:01:19] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:01:25] TOOL_BLOCKED | Blocked tool: system_command
+[2026-09-22 23:01:45] ALLOWED | Risk Score: 0 | Risk Level: LOW | Input: Hello
+[2026-09-22 23:01:45] INPUT_BLOCKED | Message cannot be empty.
+[2026-09-22 23:01:45] INPUT_BLOCKED | Message cannot be empty.
+[2026-09-22 23:01:45] INPUT_BLOCKED | Message cannot be empty.
+[2026-09-22 23:01:45] INPUT_BLOCKED | Message cannot be empty.
+[2026-09-22 23:01:45] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:01:45] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:01:45] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:01:45] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:01:45] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:01:45] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:01:45] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:01:45] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:01:45] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:01:45] TOOL_BLOCKED | Blocked tool: system_command
+[2026-09-22 23:01:45] TOOL_INPUT_BLOCKED | Invalid arguments for tool: calculator
+[2026-09-22 23:02:35] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:03:31] ALLOWED | Risk Score: 0 | Risk Level: LOW | Input: Hello
+[2026-09-22 23:03:31] INPUT_BLOCKED | Message cannot be empty.
+[2026-09-22 23:03:31] INPUT_BLOCKED | Message cannot be empty.
+[2026-09-22 23:03:31] INPUT_BLOCKED | Message cannot be empty.
+[2026-09-22 23:03:31] INPUT_BLOCKED | Message cannot be empty.
+[2026-09-22 23:03:31] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:03:31] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:03:31] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:03:31] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:03:32] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:03:32] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:03:32] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:03:32] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:03:32] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:03:32] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:03:32] TOOL_BLOCKED | Blocked tool: system_command
+[2026-09-22 23:03:32] TOOL_INPUT_BLOCKED | Invalid arguments for tool: calculator
+[2026-09-22 23:05:47] ALLOWED | Risk Score: 0 | Risk Level: LOW | Input: calculate 25*100
+[2026-09-22 23:06:56] ALLOWED | Risk Score: 0 | Risk Level: LOW | Input: calculate 25*100
+[2026-09-22 23:07:48] ALLOWED | Risk Score: 0 | Risk Level: LOW | Input: Hello
+[2026-09-22 23:07:48] INPUT_BLOCKED | Message cannot be empty.
+[2026-09-22 23:07:48] INPUT_BLOCKED | Message cannot be empty.
+[2026-09-22 23:07:49] INPUT_BLOCKED | Message cannot be empty.
+[2026-09-22 23:07:49] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:07:49] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:07:49] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:07:49] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:07:49] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:07:49] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:07:49] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:07:49] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:07:49] RATE_LIMITED | Rate limit exceeded
+[2026-09-22 23:07:49] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:07:49] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:07:49] TOOL_BLOCKED | Blocked tool: system_command
+[2026-09-22 23:07:49] TOOL_INPUT_BLOCKED | Invalid arguments for tool: calculator
+[2026-09-22 23:13:42] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:13:42] TOOL_EXECUTED | Tool: calculator | Result: 2500
+[2026-09-22 23:14:57] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:14:57] TOOL_EXECUTION_BLOCKED | Invalid mathematical expression.
+[2026-09-22 23:17:06] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:17:06] TOOL_EXECUTED | Tool: calculator | Result: 2500
+[2026-09-22 23:17:18] ALLOWED | Risk Score: 0 | Risk Level: LOW | Input: what is cybersecuirty?
+[2026-09-22 23:17:36] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:17:36] TOOL_EXECUTED | Tool: calculator | Result: 1950
+[2026-09-22 23:17:50] ALLOWED | Risk Score: 0 | Risk Level: LOW | Input: what us cyber
+[2026-09-22 23:18:14] ALLOWED | Risk Score: 0 | Risk Level: LOW | Input: only cyber
+[2026-09-22 23:18:52] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:18:52] TOOL_BLOCKED | Blocked tool: system_command
+[2026-09-22 23:18:52] TOOL_INPUT_BLOCKED | Invalid arguments for tool: calculator
+[2026-09-22 23:18:52] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:19:09] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:19:09] TOOL_EXECUTED | Tool: calculator | Result: 6.25
+[2026-09-22 23:19:24] ALLOWED | Risk Score: 0 | Risk Level: LOW | Input: 100/5
+[2026-09-22 23:19:42] TOOL_BLOCKED | Blocked tool: system_command
+[2026-09-22 23:24:20] TOOL_BLOCKED | Blocked tool: system_command
+[2026-09-22 23:24:20] TOOL_ALLOWED | Allowed tool request: calculator
+[2026-09-22 23:26:49] TOOL_BLOCKED | Blocked tool: system_command
+[2026-09-22 23:26:49] TOOL_ALLOWED | Allowed tool request: calculator
+
+============================================================
+END OF SECURITY REPORT
+============================================================

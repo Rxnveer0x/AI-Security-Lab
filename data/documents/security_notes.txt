@@ -1,0 +1,10 @@
+Cybersecurity is the practice of protecting
+systems, networks, applications, and data.
+
+Common cybersecurity areas include:
+network security, application security,
+identity management, and data protection.
+
+AI security focuses on protecting AI systems
+from threats such as prompt injection,
+jailbreaks, data leakage, and malicious inputs.
