@@ -1305,35 +1305,6 @@
         }
 
 
-
-
-        /* =====================================================
-           EVENT EXPORT
-        ===================================================== */
-
-        .event-export-container {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 8px;
-        }
-
-        .event-export-button {
-            background: var(--bg-card);
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 9px;
-            cursor: pointer;
-            transition: 0.2s ease;
-        }
-
-        .event-export-button:hover {
-            color: var(--text);
-            border-color: var(--text-muted);
-        }
-
-
 </style>
 </head>
 
@@ -1955,19 +1926,7 @@
 
 
 
-                
-<div class="event-export-container">
-
-    <button
-        type="button"
-        class="event-export-button"
-        id="exportSecurityEventsButton"
-    >
-        Export Events
-    </button>
-
-</div>
-<div
+                <div
                     class="event-list"
                     id="eventList"
                 >
@@ -4303,148 +4262,6 @@ document.addEventListener(
 );
 
 /* END SECURITY EVENT DETAILS */
-
-
-
-
-/* ============================================================
-   SECURITY EVENT EXPORT
-============================================================ */
-
-function exportSecurityEvents() {
-
-    if (
-        typeof securityEventsData ===
-        "undefined"
-    ) {
-
-        alert(
-            "No security events available."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        !Array.isArray(
-            securityEventsData
-        ) ||
-        securityEventsData.length === 0
-    ) {
-
-        alert(
-            "No security events available."
-        );
-
-        return;
-
-    }
-
-
-    const exportData = {
-
-        exported_at:
-            new Date().toISOString(),
-
-        total_events:
-            securityEventsData.length,
-
-        events:
-            securityEventsData
-
-    };
-
-
-    const jsonData =
-        JSON.stringify(
-            exportData,
-            null,
-            2
-        );
-
-
-    const blob =
-        new Blob(
-            [jsonData],
-            {
-                type:
-                    "application/json"
-            }
-        );
-
-
-    const url =
-        URL.createObjectURL(
-            blob
-        );
-
-
-    const link =
-        document.createElement(
-            "a"
-        );
-
-
-    link.href = url;
-
-    link.download =
-        "security_events_" +
-        new Date()
-            .toISOString()
-            .replace(
-                /[:.]/g,
-                "-"
-            ) +
-        ".json";
-
-
-    document.body.appendChild(
-        link
-    );
-
-
-    link.click();
-
-
-    document.body.removeChild(
-        link
-    );
-
-
-    URL.revokeObjectURL(
-        url
-    );
-
-}
-
-
-/*
-   Connect export button.
-*/
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        const button =
-            document.getElementById(
-                "exportSecurityEventsButton"
-            );
-
-
-        if (button) {
-
-            button.addEventListener(
-                "click",
-                exportSecurityEvents
-            );
-
-        }
-
-    }
-);
 
 
 </script>

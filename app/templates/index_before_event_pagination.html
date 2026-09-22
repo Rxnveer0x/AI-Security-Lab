@@ -1261,80 +1261,7 @@
 
         }
 
-    
-
-        /* =====================================================
-           EVENT PAGINATION
-        ===================================================== */
-
-        .event-pagination {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid var(--border);
-        }
-
-        .event-pagination button {
-            background: var(--bg-card);
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 9px;
-            cursor: pointer;
-        }
-
-        .event-pagination button:hover:not(:disabled) {
-            color: var(--text);
-            border-color: var(--text-muted);
-        }
-
-        .event-pagination button:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .event-pagination-info {
-            color: var(--text-muted);
-            font-size: 9px;
-            min-width: 65px;
-            text-align: center;
-        }
-
-
-
-
-        /* =====================================================
-           EVENT EXPORT
-        ===================================================== */
-
-        .event-export-container {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 8px;
-        }
-
-        .event-export-button {
-            background: var(--bg-card);
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 9px;
-            cursor: pointer;
-            transition: 0.2s ease;
-        }
-
-        .event-export-button:hover {
-            color: var(--text);
-            border-color: var(--text-muted);
-        }
-
-
-</style>
+    </style>
 </head>
 
 
@@ -1955,19 +1882,7 @@
 
 
 
-                
-<div class="event-export-container">
-
-    <button
-        type="button"
-        class="event-export-button"
-        id="exportSecurityEventsButton"
-    >
-        Export Events
-    </button>
-
-</div>
-<div
+                <div
                     class="event-list"
                     id="eventList"
                 >
@@ -1975,31 +1890,6 @@
                     <div class="dashboard-loading">
                         Loading security events...
                     </div>
-<div class="event-pagination" id="eventPagination">
-
-    <button
-        type="button"
-        id="eventPreviousButton"
-    >
-        Previous
-    </button>
-
-    <div
-        class="event-pagination-info"
-        id="eventPaginationInfo"
-    >
-        Page 1 of 1
-    </div>
-
-    <button
-        type="button"
-        id="eventNextButton"
-    >
-        Next
-    </button>
-
-</div>
-
 
                 </div>
 
@@ -4303,148 +4193,6 @@ document.addEventListener(
 );
 
 /* END SECURITY EVENT DETAILS */
-
-
-
-
-/* ============================================================
-   SECURITY EVENT EXPORT
-============================================================ */
-
-function exportSecurityEvents() {
-
-    if (
-        typeof securityEventsData ===
-        "undefined"
-    ) {
-
-        alert(
-            "No security events available."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        !Array.isArray(
-            securityEventsData
-        ) ||
-        securityEventsData.length === 0
-    ) {
-
-        alert(
-            "No security events available."
-        );
-
-        return;
-
-    }
-
-
-    const exportData = {
-
-        exported_at:
-            new Date().toISOString(),
-
-        total_events:
-            securityEventsData.length,
-
-        events:
-            securityEventsData
-
-    };
-
-
-    const jsonData =
-        JSON.stringify(
-            exportData,
-            null,
-            2
-        );
-
-
-    const blob =
-        new Blob(
-            [jsonData],
-            {
-                type:
-                    "application/json"
-            }
-        );
-
-
-    const url =
-        URL.createObjectURL(
-            blob
-        );
-
-
-    const link =
-        document.createElement(
-            "a"
-        );
-
-
-    link.href = url;
-
-    link.download =
-        "security_events_" +
-        new Date()
-            .toISOString()
-            .replace(
-                /[:.]/g,
-                "-"
-            ) +
-        ".json";
-
-
-    document.body.appendChild(
-        link
-    );
-
-
-    link.click();
-
-
-    document.body.removeChild(
-        link
-    );
-
-
-    URL.revokeObjectURL(
-        url
-    );
-
-}
-
-
-/*
-   Connect export button.
-*/
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        const button =
-            document.getElementById(
-                "exportSecurityEventsButton"
-            );
-
-
-        if (button) {
-
-            button.addEventListener(
-                "click",
-                exportSecurityEvents
-            );
-
-        }
-
-    }
-);
 
 
 </script>
