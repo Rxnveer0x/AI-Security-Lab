@@ -25,6 +25,10 @@ The project uses **Ollama** to run the AI model locally.
 
 ## Security Architecture
 
+<p align="center">
+  <img src="docs/architecture.svg" alt="AI Security Lab Architecture" width="100%">
+</p>
+
 ```text
                          USER
                            │
