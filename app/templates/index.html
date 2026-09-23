@@ -1342,6 +1342,35 @@
 .security-report-button {
     margin-left: 8px;
 }
+
+.event-severity-dot {
+    display: inline-block !important;
+    width: 9px !important;
+    height: 9px !important;
+    min-width: 9px !important;
+    min-height: 9px !important;
+    border-radius: 50% !important;
+    margin-right: 8px !important;
+    flex-shrink: 0 !important;
+    vertical-align: middle !important;
+}
+
+.event-severity-high {
+    background: #ef4444 !important;
+}
+
+.event-severity-medium {
+    background: #f59e0b !important;
+}
+
+.event-severity-low {
+    background: #22c55e !important;
+}
+
+.event-severity-none {
+    background: #9ca3af !important;
+}
+
 </style>
 </head>
 
@@ -3809,6 +3838,53 @@ function createSecurityEventElement(
 
     eventItem.className =
         "event-item";
+    
+    // Security severity indicator
+    const severityDot =
+        document.createElement("span");
+
+    severityDot.className =
+        "event-severity-dot";
+
+    const severity =
+        String(event.risk_level || "").toUpperCase();
+
+    if (severity === "HIGH") {
+
+        severityDot.classList.add(
+            "event-severity-high"
+        );
+
+    } else if (severity === "MEDIUM") {
+
+        severityDot.classList.add(
+            "event-severity-medium"
+        );
+
+    } else if (severity === "LOW") {
+
+        severityDot.classList.add(
+            "event-severity-low"
+        );
+
+    } else {
+
+        severityDot.classList.add(
+            "event-severity-none"
+        );
+    }
+
+    eventItem.prepend(severityDot);
+
+
+    eventItem.style.cursor = "pointer";
+
+    eventItem.addEventListener(
+        "click",
+        function () {
+            showSecurityEventDetails(event);
+        }
+    );
 
     eventItem.setAttribute(
         "tabindex",
@@ -4026,267 +4102,110 @@ setInterval(
 
 function showSecurityEventDetails(event) {
 
-    const overlay =
-        document.getElementById(
-            "eventDetailsOverlay"
-        );
+    const overlay = document.getElementById("eventDetailsOverlay");
+    const eventType = document.getElementById("detailEventType");
+    const timestamp = document.getElementById("detailTimestamp");
+    const risk = document.getElementById("detailRisk");
+    const message = document.getElementById("detailMessage");
+    const metadata = document.getElementById("detailMetadata");
 
-    const typeElement =
-        document.getElementById(
-            "detailEventType"
-        );
+    // Event type
+    eventType.textContent = event.event || "Unknown";
 
-    const timestampElement =
-        document.getElementById(
-            "detailTimestamp"
-        );
+    // Timestamp
+    timestamp.textContent =
+        event.timestamp || "Not available";
 
-    const riskElement =
-        document.getElementById(
-            "detailRisk"
-        );
+    // Risk level
+    const riskLevel = String(
+        event.risk_level || "Not available"
+    ).toUpperCase();
 
-    const messageElement =
-        document.getElementById(
-            "detailMessage"
-        );
+    risk.textContent = riskLevel;
 
-    const metadataElement =
-        document.getElementById(
-            "detailMetadata"
-        );
+    // Remove old styling
+    risk.style.color = "";
+    risk.style.fontWeight = "700";
 
+    // Apply direct colors
+    if (riskLevel === "HIGH") {
 
-    if (
-        !overlay ||
-        !typeElement ||
-        !timestampElement ||
-        !riskElement ||
-        !messageElement ||
-        !metadataElement
-    ) {
-        return;
+        risk.style.color = "#ef4444";
+
+    } else if (riskLevel === "MEDIUM") {
+
+        risk.style.color = "#f59e0b";
+
+    } else if (riskLevel === "LOW") {
+
+        risk.style.color = "#22c55e";
+
+    } else {
+
+        risk.style.color = "#6b7280";
     }
 
+    // Message
+    message.textContent =
+        event.message || "No message available.";
 
-    const eventName =
-        String(
-            event?.event ||
-            "UNKNOWN"
-        );
-
-
-    const timestamp =
-        String(
-            event?.timestamp ||
-            "Not available"
-        );
-
-
-    const message =
-        String(
-            event?.message ||
-            "No message available."
-        );
-
-
-    typeElement.textContent =
-        eventName;
-
-    timestampElement.textContent =
-        timestamp;
-
-    messageElement.textContent =
-        message;
-
-
-    let riskValue =
-        event?.risk_level ??
-        event?.risk ??
-        event?.riskLevel ??
-        null;
-
-
-    let riskScore =
-        event?.risk_score ??
-        event?.riskScore ??
-        null;
-
-
-    riskElement.className =
-        "event-detail-value";
-
+    // Metadata
+    metadata.innerHTML = "";
 
     if (
-        riskValue === null &&
-        riskScore === null
+        event.metadata &&
+        typeof event.metadata === "object" &&
+        Object.keys(event.metadata).length > 0
     ) {
 
-        riskElement.textContent =
-            "Not available";
+        Object.entries(event.metadata).forEach(
+            ([key, value]) => {
 
-    }
+                const row = document.createElement("div");
 
-    else {
+                row.style.marginBottom = "6px";
 
-        let riskText = "";
+                const label = document.createElement("strong");
 
-        if (riskValue !== null) {
+                label.textContent = key + ": ";
 
-            riskText =
-                String(riskValue);
+                const valueElement =
+                    document.createElement("span");
 
-        }
+                valueElement.textContent =
+                    String(value);
 
+                row.appendChild(label);
+                row.appendChild(valueElement);
 
-        if (riskScore !== null) {
-
-            if (riskText) {
-                riskText += " | ";
+                metadata.appendChild(row);
             }
+        );
 
-            riskText +=
-                "Score: " +
-                String(riskScore);
+    } else {
 
-        }
-
-
-        riskElement.textContent =
-            riskText;
-
-
-        const normalizedRisk =
-            String(
-                riskValue || ""
-            ).toUpperCase();
-
-
-        if (
-            normalizedRisk === "HIGH"
-        ) {
-
-            riskElement.classList.add(
-                "event-detail-risk-high"
-            );
-
-        }
-
-        else if (
-            normalizedRisk === "MEDIUM"
-        ) {
-
-            riskElement.classList.add(
-                "event-detail-risk-medium"
-            );
-
-        }
-
-        else if (
-            normalizedRisk === "LOW"
-        ) {
-
-            riskElement.classList.add(
-                "event-detail-risk-low"
-            );
-
-        }
-
-    }
-
-
-    const metadata = {};
-
-
-    Object.keys(
-        event || {}
-    ).forEach(
-        function (key) {
-
-            if (
-                key !== "event" &&
-                key !== "timestamp" &&
-                key !== "message" &&
-                key !== "risk_level" &&
-                key !== "risk" &&
-                key !== "riskLevel" &&
-                key !== "risk_score" &&
-                key !== "riskScore"
-            ) {
-
-                metadata[key] =
-                    event[key];
-
-            }
-
-        }
-    );
-
-
-    if (
-        Object.keys(metadata).length === 0
-    ) {
-
-        metadataElement.textContent =
+        metadata.textContent =
             "No additional metadata available.";
-
     }
 
-    else {
-
-        try {
-
-            metadataElement.textContent =
-                JSON.stringify(
-                    metadata,
-                    null,
-                    2
-                );
-
-        }
-
-        catch (error) {
-
-            metadataElement.textContent =
-                "Metadata could not be displayed.";
-
-        }
-
-    }
-
-
-    overlay.classList.add(
-        "visible"
-    );
-
-
-    document.body.style.overflow =
-        "hidden";
-
+    // Show modal
+    overlay.style.display = "flex";
+    overlay.classList.add("show");
 }
 
 
 function closeSecurityEventDetails() {
 
-    const overlay =
-        document.getElementById(
-            "eventDetailsOverlay"
-        );
-
+    const overlay = document.getElementById(
+        "eventDetailsOverlay"
+    );
 
     if (!overlay) {
         return;
     }
 
-
-    overlay.classList.remove(
-        "visible"
-    );
-
-
-    document.body.style.overflow =
-        "";
-
+    overlay.classList.remove("show");
+    overlay.style.display = "none";
 }
 
 
@@ -4466,6 +4385,26 @@ document.addEventListener(
     }
 );
 
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const closeButton =
+            document.querySelector(
+                "#eventDetailsOverlay .close"
+            );
+
+        if (closeButton) {
+
+            closeButton.addEventListener(
+                "click",
+                closeSecurityEventDetails
+            );
+        }
+    }
+);
 
 </script>
 

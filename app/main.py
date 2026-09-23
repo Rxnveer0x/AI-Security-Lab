@@ -1,12 +1,13 @@
 import json
+
 from flask import Flask, request, jsonify, render_template
 from flask_limiter import Limiter
-from app.tool_router import route_tool_request
 from flask_limiter.util import get_remote_address
 
-from security.document_retriever import retrieve_documents
-
+from app.tool_router import route_tool_request
 from app.ollama_client import ask_ollama
+
+from security.document_retriever import retrieve_documents
 
 from security.input_validator import validate_input
 from security.prompt_detector import detect_prompt_injection
@@ -59,9 +60,11 @@ def security_summary():
     return jsonify(
         get_security_summary()
     )
-# =========================
+
+
+# ============================================================
 # ATTACK TEST REPORT API
-# =========================
+# ============================================================
 
 @app.route("/attack-test-report", methods=["GET"])
 def attack_test_report():
@@ -95,6 +98,7 @@ def attack_test_report():
         return jsonify({
             "error": str(error)
         }), 500
+
 
 # ============================================================
 # CHAT API
@@ -190,10 +194,13 @@ def chat():
         )
 
         log_security_event(
-            f"Risk Score: {risk_result['score']} | "
-            f"Risk Level: {risk_result['risk_level']} | "
-            f"Input: {user_input}",
-            "PROMPT_INJECTION"
+            "Prompt injection attempt detected",
+            "PROMPT_INJECTION",
+            risk_level=risk_result["risk_level"],
+            metadata={
+                "risk_score": risk_result["score"],
+                "category": "Prompt Injection"
+            }
         )
 
         return jsonify({
@@ -235,10 +242,13 @@ def chat():
     if jailbreak_detected:
 
         log_security_event(
-            f"Risk Score: 80 | "
-            f"Risk Level: HIGH | "
-            f"Input: {user_input}",
-            "JAILBREAK_DETECTED"
+            "Jailbreak attempt detected",
+            "JAILBREAK_DETECTED",
+            risk_level="HIGH",
+            metadata={
+                "risk_score": 80,
+                "category": "Jailbreak Detection"
+            }
         )
 
         return jsonify({
@@ -300,10 +310,14 @@ def chat():
     if pii_detected:
 
         log_security_event(
-            f"Risk Score: {risk_score} | "
-            f"Risk Level: {risk_level} | "
-            f"PII: {', '.join(pii_detected)}",
-            "PII_DETECTED"
+            "Sensitive information detected",
+            "PII_DETECTED",
+            risk_level=risk_level,
+            metadata={
+                "risk_score": risk_score,
+                "pii_types": ", ".join(pii_detected),
+                "category": "PII Protection"
+            }
         )
 
         return jsonify({
@@ -378,18 +392,22 @@ def chat():
 
 
     # ========================================================
-    # ========================================================
     # SECURE TOOL REQUEST
     # ========================================================
 
     try:
-        tool_result = route_tool_request(user_input)
+
+        tool_result = route_tool_request(
+            user_input
+        )
 
         if tool_result is not None:
 
             if tool_result.get("success"):
 
-                result = tool_result.get("result")
+                result = tool_result.get(
+                    "result"
+                )
 
                 log_security_event(
                     f"Tool: calculator | Result: {result}",
@@ -435,6 +453,7 @@ def chat():
         )
 
 
+    # ========================================================
     # RAG DOCUMENT RETRIEVAL
     # ========================================================
 
@@ -548,7 +567,8 @@ def chat():
 
         log_security_event(
             f"Output PII detected: {', '.join(output_pii)}",
-            "OUTPUT_PII_DETECTED"
+            "OUTPUT_PII_DETECTED",
+            risk_level="HIGH"
         )
 
         return jsonify({
@@ -560,11 +580,11 @@ def chat():
             "risk_score": 80,
             "risk_level": "HIGH",
             "output_findings": output_pii
-        }), 500
+        }), 403
 
 
     # --------------------------------------------------------
-    # Output Security: Secrets Detection
+    # Output Security: Sensitive Information
     # --------------------------------------------------------
 
     try:
@@ -592,7 +612,7 @@ def chat():
 
 
     # --------------------------------------------------------
-    # Block Secrets / Sensitive Credentials
+    # Block Sensitive Output
     # --------------------------------------------------------
 
     if not output_safe:
@@ -605,7 +625,8 @@ def chat():
         log_security_event(
             f"Sensitive output detected: "
             f"{', '.join(output_findings)}",
-            "OUTPUT_BLOCKED"
+            "OUTPUT_BLOCKED",
+            risk_level="HIGH"
         )
 
         return jsonify({
@@ -618,7 +639,7 @@ def chat():
             "risk_score": 80,
             "risk_level": "HIGH",
             "output_findings": output_findings
-        }), 500
+        }), 403
 
 
     # ========================================================
@@ -626,10 +647,13 @@ def chat():
     # ========================================================
 
     log_security_event(
-        f"Risk Score: {risk_score} | "
-        f"Risk Level: {risk_level} | "
-        f"Input: {user_input}",
-        "ALLOWED"
+        "Request allowed",
+        "ALLOWED",
+        risk_level=risk_level,
+        metadata={
+            "risk_score": risk_score,
+            "category": "Normal Request"
+        }
     )
 
 
@@ -650,16 +674,24 @@ def chat():
 # ============================================================
 
 @app.errorhandler(429)
-def rate_limit_exceeded(error):
+def handle_rate_limit(error):
 
     log_security_event(
         "Rate limit exceeded",
-        "RATE_LIMITED"
+        "RATE_LIMITED",
+        risk_level="MEDIUM",
+        metadata={
+            "source": "Flask-Limiter",
+            "category": "Availability Protection",
+            "limit": "5 per minute"
+        }
     )
 
     return jsonify({
         "response": "Too many requests. Please try again later.",
-        "status": "rate_limited"
+        "status": "rate_limited",
+        "risk_level": "MEDIUM",
+        "security_category": "Availability Protection"
     }), 429
 
 
@@ -670,21 +702,24 @@ def rate_limit_exceeded(error):
 @app.route("/security-events", methods=["GET"])
 def security_events():
 
-    events = get_recent_events(20)
+    events = get_recent_events(
+        20
+    )
 
     return jsonify({
         "events": events
     }), 200
 
 
-# ========================
+# ============================================================
 # SECURITY REPORT API
-# ========================
+# ============================================================
 
 @app.route("/security-report", methods=["GET"])
 def security_report():
 
     try:
+
         from security.security_report import generate_security_report
 
         report_path = generate_security_report()
@@ -694,6 +729,7 @@ def security_report():
             "r",
             encoding="utf-8"
         ) as file:
+
             report = file.read()
 
         return jsonify({
@@ -717,6 +753,8 @@ def security_report():
             "status": "error",
             "message": "Security report could not be generated."
         }), 500
+
+
 # ============================================================
 # START SERVER
 # ============================================================

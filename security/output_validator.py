@@ -1,49 +1,74 @@
 import re
 
 
-SECRET_PATTERNS = {
-    "API_KEY": r"\b(?:sk-[A-Za-z0-9]{20,}|AIza[0-9A-Za-z_-]{20,})\b",
+# ============================================================
+# SENSITIVE OUTPUT PATTERNS
+# ============================================================
 
-    "AWS_ACCESS_KEY": r"\bAKIA[0-9A-Z]{16}\b",
+SENSITIVE_PATTERNS = {
 
-    "JWT_TOKEN": r"\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b",
+    "API_KEY": [
+        r"\bsk-[A-Za-z0-9_-]{10,}\b",
+        r"\bapi[_-]?key\s*[:=]\s*[A-Za-z0-9_-]{8,}\b",
+    ],
 
-    "PRIVATE_KEY": r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----",
+    "AWS_ACCESS_KEY": [
+        r"\bAKIA[0-9A-Z]{16}\b",
+    ],
 
-    "PASSWORD": r"(?i)\b(?:password|passwd|pwd)\s*[:=]\s*[^\s]+",
+    "PASSWORD": [
+        r"\bpassword\s*[:=]\s*\S+\b",
+    ],
 
-    "SECRET": r"(?i)\b(?:secret|api_secret|client_secret)\s*[:=]\s*[^\s]+",
 }
 
 
-def detect_sensitive_output(text):
-    """
-    Detect secrets or sensitive credentials in AI-generated output.
+# ============================================================
+# DETECT SENSITIVE OUTPUT
+# ============================================================
 
-    Returns:
-        (detected, findings)
-    """
+def detect_sensitive_output(text):
 
     if not isinstance(text, str):
-        return False, []
+        return []
 
-    findings = []
+    detected = []
 
-    for secret_type, pattern in SECRET_PATTERNS.items():
-        if re.search(pattern, text):
-            findings.append(secret_type)
+    for category, patterns in SENSITIVE_PATTERNS.items():
 
-    return bool(findings), findings
+        for pattern in patterns:
 
+            if re.search(
+                pattern,
+                text,
+                re.IGNORECASE
+            ):
+
+                detected.append(category)
+
+                break
+
+    return detected
+
+
+# ============================================================
+# VALIDATE OUTPUT
+# ============================================================
 
 def validate_output(text):
-    """
-    Validate AI-generated output before returning it to the user.
-    """
 
-    detected, findings = detect_sensitive_output(text)
+    detected_findings = detect_sensitive_output(
+        text
+    )
 
-    if detected:
-        return False, findings
+    if detected_findings:
 
-    return True, []
+        return (
+            False,
+            detected_findings
+        )
+
+    return (
+        True,
+        []
+    )
