@@ -1338,10 +1338,6 @@
 .event-export-csv-button {
     margin-left: 8px;
 }
-
-.security-report-button {
-    margin-left: 8px;
-}
 </style>
 </head>
 
@@ -1980,12 +1976,6 @@
     <button class="event-export-button" id="exportCsvButton">
         Export CSV
     </button>
-<button
-    class="event-export-button security-report-button"
-    id="downloadSecurityReportButton">
-    Download Security Report
-</button>
-
 </div>
 <div
                     class="event-list"
@@ -4531,27 +4521,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (csvButton) {
         csvButton.addEventListener("click", exportSecurityEventsCSV);
-    }
-});
-</script>
-
-<script>
-function downloadSecurityReport() {
-    window.location.href = "/security-report";
-}
-</script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const reportButton = document.getElementById(
-        "downloadSecurityReportButton"
-    );
-
-    if (reportButton) {
-        reportButton.addEventListener(
-            "click",
-            downloadSecurityReport
-        );
     }
 });
 </script>
