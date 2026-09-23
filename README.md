@@ -76,6 +76,89 @@ The project uses **Ollama** to run the AI model locally.
 ## Security Dashboard
 
 The Security Dashboard provides a web-based interface for monitoring the security status of the AI application.
+## Security Demonstration
+
+The AI Security Lab protects a local AI application through multiple security layers.
+
+### Normal Request
+
+A legitimate request is processed by the AI application.
+
+```text
+User Request
+     ↓
+Input Security
+     ↓
+Risk Assessment
+     ↓
+Ollama / Qwen3 4B
+     ↓
+Output Security
+     ↓
+Response
+```
+
+### Prompt Injection
+
+Suspicious prompt-injection requests are detected and blocked before reaching the AI model.
+
+```text
+Malicious Request
+        ↓
+Prompt Injection Detection
+        ↓
+Risk Scoring
+        ↓
+Request Blocked
+        ↓
+Security Event Logged
+```
+
+### Jailbreak Detection
+
+Jailbreak-style requests are analyzed by the security middleware and blocked when detected.
+
+```text
+Jailbreak Attempt
+        ↓
+Jailbreak Detection
+        ↓
+HIGH Risk
+        ↓
+Request Blocked
+        ↓
+Security Event Logged
+```
+
+### PII Detection
+
+Requests containing sensitive personal information are detected and blocked.
+
+```text
+User Input
+    ↓
+PII Detection
+    ↓
+Sensitive Information Found
+    ↓
+Request Blocked
+    ↓
+Security Event Logged
+```
+
+### Security Monitoring
+
+All important security events are recorded and displayed through the dashboard.
+
+```text
+Security Event
+      ↓
+Security Logger
+      ↓
+Security Monitoring
+      ↓
+Security Dashboard
+```
 
 ### Dashboard Features
 
