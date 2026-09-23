@@ -2,123 +2,191 @@
 
 A local AI Security Lab for detecting, blocking, monitoring, and testing security threats in AI applications.
 
+---
+
 ## Overview
 
-AI Security Lab is a local AI security platform built with Python and Flask. It places security controls around an AI chatbot to detect suspicious input, protect sensitive information, secure RAG and tool usage, validate AI output, and monitor security events.
+AI Security Lab is a local AI security platform built with **Python and Flask**.
 
-The project uses Ollama to run the AI model locally.
+It places security controls around an AI chatbot to:
+
+- Detect suspicious input
+- Detect prompt injection attacks
+- Detect jailbreak attempts
+- Protect sensitive information
+- Secure RAG and tool usage
+- Validate AI output
+- Monitor security events
+- Test AI security controls
+
+The project uses **Ollama** to run the AI model locally.
+
+---
 
 ## Security Architecture
 
 ```text
-User
-  │
-  ▼
-Flask AI Application
-  │
-  ▼
-Security Middleware
-  │
-  ├── Input Validation
-  ├── Prompt Injection Detection
-  ├── Jailbreak Detection
-  ├── PII Detection
-  ├── Risk Scoring
-  ├── Rate Limiting
-  │
-  ▼
-RAG / Tool Security
-  │
-  ├── Secure Document Retrieval
-  └── Secure Tool Execution
-  │
-  ▼
-Local AI Model
-(Ollama)
-  │
-  ▼
-Output Security
-  │
-  ├── PII Detection
-  └── Sensitive Output Detection
-  │
-  ▼
-Security Logging & Monitoring
-  │
-  ▼
-Security Dashboard
-Features
-AI Security
-Prompt injection detection
-Jailbreak detection
-PII detection
-Risk scoring
-Input validation
-Rate limiting
-Sensitive output detection
-Output validation
-RAG Security
-Document loading
-Document processing
-Secure document retrieval
-RAG injection detection and blocking
-Tool Security
-Secure calculator tool
-Tool request routing
-Tool input validation
-Unsafe tool request blocking
-Security Monitoring
-Security event logging
-Security event monitoring
-Risk-level tracking
-Security event filtering
-Event pagination
-Event details
-JSON event export
-CSV event export
-Security report generation
-Security Dashboard
+                         USER
+                           │
+                           ▼
+                 ┌────────────────────┐
+                 │  Flask AI          │
+                 │  Application       │
+                 └─────────┬──────────┘
+                           │
+                           ▼
+                 ┌────────────────────┐
+                 │ Security Middleware│
+                 └─────────┬──────────┘
+                           │
+          ┌────────────────┼─────────────────┐
+          │                │                 │
+          ▼                ▼                 ▼
+   Input Security     RAG Security     Tool Security
+          │                │                 │
+   • Input Validation  • Document       • Tool Routing
+   • Prompt Injection    Retrieval      • Input Validation
+   • Jailbreak         • RAG Injection  • Unsafe Tool
+   • PII Detection       Detection        Blocking
+   • Risk Scoring
+   • Rate Limiting
+          │                │                 │
+          └────────────────┼─────────────────┘
+                           │
+                           ▼
+                 ┌────────────────────┐
+                 │   Ollama / Qwen3   │
+                 │       4B           │
+                 └─────────┬──────────┘
+                           │
+                           ▼
+                 ┌────────────────────┐
+                 │  Output Security   │
+                 └─────────┬──────────┘
+                           │
+                  • PII Detection
+                  • Sensitive Output
+                    Detection
+                  • Output Validation
+                           │
+                           ▼
+                 ┌────────────────────┐
+                 │ Security Logging & │
+                 │    Monitoring      │
+                 └─────────┬──────────┘
+                           │
+                           ▼
+                 ┌────────────────────┐
+                 │ Security Dashboard │
+                 └────────────────────┘
+```
 
-The dashboard provides:
+---
 
-System status
-Security summary
-Threat overview
-Security analytics
-Risk-level statistics
-Recent security events
-Event filtering
-Event details
-Attack-test results
-Security report download
-Attack Testing
+## Features
 
-The project includes automated security testing for:
+### AI Security
 
-Prompt injection
-Jailbreak attempts
-PII detection
-Sensitive output detection
-RAG injection
-Unsafe tool requests
-Safe calculator execution
-Additional advanced security cases
+- Prompt injection detection
+- Jailbreak detection
+- PII detection
+- Risk scoring
+- Input validation
+- Rate limiting
+- Sensitive output detection
+- Output validation
 
-Security tests are also executed automatically using GitHub Actions.
+### RAG Security
 
-Technology Stack
-Python
-Flask
-Ollama
-Qwen3 4B
-Flask-Limiter
-Pytest
-HTML
-CSS
-JavaScript
-Git
-GitHub Actions
-Project Structure
+- Document loading
+- Document processing
+- Secure document retrieval
+- RAG injection detection
+- RAG injection blocking
+
+### Tool Security
+
+- Secure calculator tool
+- Tool request routing
+- Tool input validation
+- Unsafe tool request blocking
+
+### Security Monitoring
+
+- Security event logging
+- Security event monitoring
+- Risk-level tracking
+- Security event filtering
+- Event pagination
+- Event details
+- JSON event export
+- CSV event export
+- Security report generation
+
+---
+
+## Security Dashboard
+
+The Security Dashboard provides a web-based interface for monitoring the security status of the AI application.
+
+### Dashboard Features
+
+- System status
+- Security summary
+- Threat overview
+- Security analytics
+- Risk-level statistics
+- Recent security events
+- Event filtering
+- Event pagination
+- Event details
+- Attack-test results
+- JSON event export
+- CSV event export
+- Security report download
+
+---
+
+## Attack Testing
+
+The project includes automated security testing for different AI security threats.
+
+### Attack Tests
+
+- Prompt injection
+- Jailbreak attempts
+- PII detection
+- Sensitive output detection
+- RAG injection
+- Unsafe tool requests
+- Safe calculator execution
+- Additional advanced security cases
+
+Security tests are also executed automatically using **GitHub Actions**.
+
+---
+
+## Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| Python | Core programming language |
+| Flask | Web application and API |
+| Ollama | Local AI model runtime |
+| Qwen3 4B | Local language model |
+| Flask-Limiter | Rate limiting |
+| Pytest | Automated testing |
+| HTML | Dashboard structure |
+| CSS | Dashboard styling |
+| JavaScript | Dashboard functionality |
+| Git | Version control |
+| GitHub Actions | Automated security testing |
+
+---
+
+## Project Structure
+
+```text
 AI-Security-Lab/
 │
 ├── app/
@@ -165,108 +233,277 @@ AI-Security-Lab/
 ├── pytest.ini
 ├── README.md
 └── .gitignore
-Requirements
-Python 3.14
-Ollama
-Git
-Windows/Linux/macOS
-Local Setup
+```
 
-Clone the repository:
+---
 
+## Requirements
+
+Before running the project, install:
+
+- Python 3.14
+- Ollama
+- Git
+
+### Supported Operating Systems
+
+- Windows
+- Linux
+- macOS
+
+---
+
+## Local Setup
+
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/Rxnveer0x/AI-Security-Lab.git
+```
+
+```bash
 cd AI-Security-Lab
+```
 
-Create a virtual environment:
+### 2. Create a Virtual Environment
 
+```bash
 python -m venv .venv
+```
 
-Activate it on Windows:
+### 3. Activate the Virtual Environment
 
+#### Windows PowerShell
+
+```powershell
 .venv\Scripts\Activate.ps1
+```
 
-Install dependencies:
+#### Linux / macOS
 
+```bash
+source .venv/bin/activate
+```
+
+### 4. Install Dependencies
+
+```bash
 pip install -r requirements.txt
-Ollama Setup
+```
 
-Install Ollama and make sure it is running.
+---
 
-Pull the model:
+## Ollama Setup
 
+Install **Ollama** and make sure it is running.
+
+### Pull the AI Model
+
+```bash
 ollama pull qwen3:4b
+```
 
-Verify the model:
+### Verify the Model
 
+```bash
 ollama list
-Run the Application
+```
+
+The model should appear in the list.
+
+---
+
+## Run the Application
 
 Start the Flask application:
 
+```bash
 python -m app.main
+```
 
 The application will run at:
 
+```text
 http://127.0.0.1:5000
+```
 
 Open the address in your browser.
 
-Run Security Tests
+---
 
-Run the complete automated test suite:
+## Run Security Tests
 
+### Complete Test Suite
+
+Run all automated tests:
+
+```bash
 python -m pytest -v
+```
 
-Run the AI attack suite:
+### AI Attack Suite
 
+Run the AI security attack tests:
+
+```bash
 python -m tests.ai_attack_suite
-GitHub Actions
+```
 
-The project includes a GitHub Actions workflow that automatically runs the security test suite when changes are pushed to the master branch or submitted through a pull request.
+### Advanced Attack Tests
 
-Workflow:
+```bash
+python -m tests.advanced_attack_tests
+```
 
+---
+
+## GitHub Actions
+
+The project includes a GitHub Actions workflow for automated security testing.
+
+The workflow runs when:
+
+- Code is pushed to the `master` branch
+- A pull request is created for the `master` branch
+
+### Workflow File
+
+```text
 .github/workflows/security-tests.yml
-Security Reports
+```
 
-Security reports and attack-test results are stored under:
+The workflow installs the project dependencies and runs the automated test suite.
 
+---
+
+## Security Reports
+
+Security reports and attack-test results are stored in:
+
+```text
 data/reports/
+```
 
-The application also provides security reports through the dashboard.
+The project can generate security reports containing information about detected security events and attack-test results.
 
-Security Event Monitoring
+---
 
-Security events are logged with information such as:
+## Security Event Monitoring
 
-Timestamp
-Event type
-Message
-Risk level
-Security metadata
+Security events are recorded with information such as:
 
-The dashboard provides filtering, pagination, event details, and export functionality.
+- Timestamp
+- Event type
+- Message
+- Risk level
+- Security metadata
 
-Project Goal
+The dashboard provides tools for viewing and analyzing these events.
+
+### Event Management
+
+- Event filtering
+- Event pagination
+- Event details
+- JSON export
+- CSV export
+- Security report generation
+
+---
+
+## Security Controls
+
+The application implements security controls at multiple stages of the AI request lifecycle.
+
+### Input Security
+
+```text
+User Input
+    │
+    ├── Input Validation
+    ├── Prompt Injection Detection
+    ├── Jailbreak Detection
+    ├── PII Detection
+    ├── Risk Scoring
+    └── Rate Limiting
+```
+
+### RAG and Tool Security
+
+```text
+Request
+   │
+   ├── RAG Security
+   │      ├── Document Processing
+   │      ├── Document Retrieval
+   │      └── RAG Injection Detection
+   │
+   └── Tool Security
+          ├── Tool Routing
+          ├── Input Validation
+          └── Unsafe Tool Blocking
+```
+
+### Output Security
+
+```text
+AI Response
+    │
+    ├── Output Validation
+    ├── PII Detection
+    └── Sensitive Output Detection
+```
+
+---
+
+## Project Goal
 
 The goal of this project is to understand how security controls can be designed around AI applications and LLM-based systems.
 
 The project focuses on defensive AI security concepts including:
 
-LLM security
-Prompt injection
-Jailbreak detection
-PII protection
-RAG security
-Tool security
-Output security
-Security monitoring
-Automated security testing
-Author
+- LLM security
+- Prompt injection
+- Jailbreak detection
+- PII protection
+- RAG security
+- Tool security
+- Output security
+- Security monitoring
+- Automated security testing
 
-Ranveer Singh
+---
 
-GitHub:
+## Learning Focus
+
+This project provides practical experience with:
+
+- AI application security
+- LLM security
+- Secure AI architecture
+- Prompt injection defense
+- Jailbreak detection
+- PII protection
+- RAG security
+- Tool security
+- Output security
+- Security monitoring
+- Automated security testing
+- Python security development
+- Flask application security
+
+---
+
+## Author
+
+**Ranveer Singh**
+
+---
+
+## GitHub
+
+**Repository:**
 
 https://github.com/Rxnveer0x/AI-Security-Lab
 
+---
