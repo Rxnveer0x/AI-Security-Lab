@@ -29,63 +29,7 @@ The project uses **Ollama** to run the AI model locally.
   <img src="docs/architecture.svg" alt="AI Security Lab Architecture" width="100%">
 </p>
 
-```text
-                         USER
-                           │
-                           ▼
-                 ┌────────────────────┐
-                 │  Flask AI          │
-                 │  Application       │
-                 └─────────┬──────────┘
-                           │
-                           ▼
-                 ┌────────────────────┐
-                 │ Security Middleware│
-                 └─────────┬──────────┘
-                           │
-          ┌────────────────┼─────────────────┐
-          │                │                 │
-          ▼                ▼                 ▼
-   Input Security     RAG Security     Tool Security
-          │                │                 │
-   • Input Validation  • Document       • Tool Routing
-   • Prompt Injection    Retrieval      • Input Validation
-   • Jailbreak         • RAG Injection  • Unsafe Tool
-   • PII Detection       Detection        Blocking
-   • Risk Scoring
-   • Rate Limiting
-          │                │                 │
-          └────────────────┼─────────────────┘
-                           │
-                           ▼
-                 ┌────────────────────┐
-                 │   Ollama / Qwen3   │
-                 │       4B           │
-                 └─────────┬──────────┘
-                           │
-                           ▼
-                 ┌────────────────────┐
-                 │  Output Security   │
-                 └─────────┬──────────┘
-                           │
-                  • PII Detection
-                  • Sensitive Output
-                    Detection
-                  • Output Validation
-                           │
-                           ▼
-                 ┌────────────────────┐
-                 │ Security Logging & │
-                 │    Monitoring      │
-                 └─────────┬──────────┘
-                           │
-                           ▼
-                 ┌────────────────────┐
-                 │ Security Dashboard │
-                 └────────────────────┘
-```
 
----
 
 ## Features
 
