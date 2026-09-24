@@ -80,6 +80,20 @@ The Security Dashboard provides a web-based interface for monitoring the securit
 
 The AI Security Lab protects a local AI application through multiple security layers.
 
+## Project Screenshots
+
+### Security Dashboard
+
+<p align="center">
+  <img src="docs/screenshots/dashboard.png" alt="AI Security Dashboard" width="100%">
+</p>
+
+### Security Event Details
+
+<p align="center">
+  <img src="docs/screenshots/security-event-details.png" alt="Security Event Details" width="100%">
+</p>
+
 ### Normal Request
 
 A legitimate request is processed by the AI application.
