@@ -1,18 +1,18 @@
 # AI Security Lab
 
-A local AI security project built to understand how AI applications can be protected from common security threats.
+A local AI security project built to understand how security can be added to an AI application.
 
-The project started as a simple local AI chatbot and was gradually extended with security checks around the AI request and response flow.
+The project uses Flask for the application, Ollama for running the AI model locally, and Qwen3 4B as the local language model.
 
 ---
 
-## What is this project?
+## Overview
 
-This project is a Flask-based local AI application using Ollama and Qwen3 4B.
+AI Security Lab started as a simple local AI chatbot and was then extended with different security controls.
 
-Instead of sending requests directly to the AI model, the application checks them through different security layers first.
+The main idea is to check user requests before they reach the AI model and check the AI response before it is returned to the user.
 
-The main things I worked on are:
+The project currently includes:
 
 - Prompt injection detection
 - Jailbreak detection
@@ -27,13 +27,17 @@ The main things I worked on are:
 - Security monitoring
 - Automated security testing
 
-The AI model runs locally through Ollama.
+The AI model runs locally through **Ollama**, so the basic application does not depend on a cloud AI API.
 
 ---
 
-## How it works
+## Security Architecture
 
-The basic request flow is:
+<p align="center">
+  <img src="docs/architecture.svg" alt="AI Security Lab Architecture" width="100%">
+</p>
+
+The main request flow looks like this:
 
 ```text
 User
@@ -53,67 +57,194 @@ Logging & Monitoring
 Security Dashboard
 ```
 
-The idea is to check the request before it reaches the model and also check the model's response before returning it to the user.
+The security controls are placed around the AI model instead of treating the model as the only part of the application that needs protection.
 
 ---
 
-## Security Features
+## Features
 
-### Input Security
+### AI Security
 
-The application checks user input for different types of problems.
+The input security layer checks requests before they are processed by the AI model.
 
-- Input validation
+It includes:
+
 - Prompt injection detection
 - Jailbreak detection
 - PII detection
 - Risk scoring
+- Input validation
 - Rate limiting
+- Sensitive output detection
+- Output validation
 
-For example, a prompt-injection attempt can be blocked before it reaches the AI model.
+### RAG Security
+
+The project also includes a basic RAG security layer for working with documents.
+
+It handles:
+
+- Document loading
+- Document processing
+- Document retrieval
+- RAG injection detection
+- RAG injection blocking
+
+The retrieved content is checked before it is passed further into the AI workflow.
+
+### Tool Security
+
+The project includes a calculator tool to demonstrate how AI tool requests can be controlled.
+
+The tool security layer handles:
+
+- Tool request routing
+- Tool validation
+- Tool input validation
+- Unsafe tool request blocking
+- Safe tool execution
+
+The calculator only accepts expressions that match the allowed format instead of executing arbitrary input.
+
+### Security Monitoring
+
+Security events are recorded so that activity can be reviewed later.
+
+The monitoring system includes:
+
+- Security event logging
+- Security event monitoring
+- Risk-level tracking
+- Security event filtering
+- Event pagination
+- Event details
+- JSON event export
+- CSV event export
+- Security report generation
+
+---
+
+## Security Dashboard
+
+The project includes a web-based security dashboard.
+
+The dashboard is used to monitor the security activity of the application instead of checking log files manually.
+
+It currently includes:
+
+- System status
+- Security summary
+- Threat overview
+- Security analytics
+- Risk-level statistics
+- Recent security events
+- Event filtering
+- Event pagination
+- Event details
+- Attack-test results
+- JSON event export
+- CSV event export
+- Security report download
+
+---
+
+## Security Demonstration
+
+The following examples show how some of the security controls work.
+
+### Normal Request
+
+A normal request goes through the input security layer before reaching the local AI model.
+
+```text
+User Request
+     ↓
+Input Security
+     ↓
+Risk Assessment
+     ↓
+Ollama / Qwen3 4B
+     ↓
+Output Security
+     ↓
+Response
+```
+
+### Prompt Injection
+
+A suspicious prompt-injection request can be detected and blocked before reaching the AI model.
 
 ```text
 Malicious Request
-       ↓
+        ↓
 Prompt Injection Detection
-       ↓
+        ↓
 Risk Scoring
-       ↓
+        ↓
 Request Blocked
-       ↓
+        ↓
+Security Event Logged
+```
+
+### Jailbreak Detection
+
+Jailbreak-style requests are checked by the security middleware.
+
+When detected, the request is blocked and recorded as a security event.
+
+```text
+Jailbreak Attempt
+        ↓
+Jailbreak Detection
+        ↓
+HIGH Risk
+        ↓
+Request Blocked
+        ↓
+Security Event Logged
+```
+
+### PII Detection
+
+The application checks user input for sensitive personal information.
+
+If sensitive information is detected, the request can be blocked before it reaches the AI model.
+
+```text
+User Input
+    ↓
+PII Detection
+    ↓
+Sensitive Information Found
+    ↓
+Request Blocked
+    ↓
 Security Event Logged
 ```
 
 ### RAG Security
 
-The project also includes basic security checks for retrieved documents.
-
-It can:
-
-- Load documents
-- Process documents
-- Retrieve relevant documents
-- Check retrieved content for malicious instructions
-- Block unsafe RAG content
+Retrieved documents are also checked for suspicious instructions.
 
 ```text
 Document
-   ↓
+    ↓
 Document Processing
-   ↓
+    ↓
 Document Retrieval
-   ↓
-RAG Security Check
-   ↓
-Safe → Continue
-Unsafe → Block
+    ↓
+RAG Security
+    ↓
+Malicious Context?
+   ↙        ↘
+ Yes        No
+  ↓          ↓
+Block      Continue
 ```
 
 ### Tool Security
 
-The application has a calculator tool to demonstrate how AI tools can be controlled.
-
-Tool requests go through validation before execution.
+Tool requests are sent through the tool router and validation layer before execution.
 
 ```text
 User Request
@@ -122,26 +253,16 @@ Tool Router
      ↓
 Tool Validation
      ↓
-Safe Tool Request?
-   ↙          ↘
- Yes          No
-  ↓            ↓
-Execute       Block
+Safe Tool?
+   ↙      ↘
+ Yes      No
+  ↓        ↓
+Execute   Block
 ```
-
-The calculator only accepts allowed mathematical expressions instead of directly executing arbitrary input.
 
 ### Output Security
 
-The AI response is also checked before it is returned.
-
-The output security layer checks for:
-
-- PII
-- API keys
-- AWS access keys
-- Password-like values
-- Other sensitive output patterns
+The response generated by the AI model is checked before being returned.
 
 ```text
 AI Response
@@ -152,33 +273,26 @@ PII Detection
      ↓
 Sensitive Output Detection
      ↓
-Response
+Safe Response
+```
+
+### Security Monitoring
+
+Important security events are written to the security log and then displayed through the dashboard.
+
+```text
+Security Event
+      ↓
+Security Logger
+      ↓
+Security Monitoring
+      ↓
+Security Dashboard
 ```
 
 ---
 
-## Security Dashboard
-
-The project includes a web dashboard for viewing security activity.
-
-It currently shows:
-
-- System status
-- Security summary
-- Threat overview
-- Security analytics
-- Risk levels
-- Recent security events
-- Event filtering
-- Event pagination
-- Event details
-- Attack-test results
-
-There are also options to export events as JSON or CSV and generate a security report.
-
----
-
-## Screenshots
+## Project Screenshots
 
 ### Security Dashboard
 
@@ -194,77 +308,48 @@ There are also options to export events as JSON or CSV and generate a security r
 
 ---
 
-## Security Testing
+## Attack Testing
 
-I added automated tests for the main security components of the project.
+The project includes automated tests for different AI security scenarios.
 
-The tests cover areas such as:
+The attack testing covers:
 
-- Jailbreak detection
+- Prompt injection
+- Jailbreak attempts
 - PII detection
-- Prompt injection and RAG security
-- Risk scoring
-- Output security
 - Sensitive output detection
-- Tool routing
-- Tool security
-- Calculator validation
+- RAG injection
+- Unsafe tool requests
+- Safe calculator execution
+- Additional advanced security cases
 
-The complete pytest suite currently has:
+The normal pytest suite currently contains 44 tests.
+
+The latest local test run completed successfully:
 
 ```text
-44 passed in 2.44s
+================ 44 passed in 2.44s ================
 ```
 
-There are also separate attack-testing scripts for testing AI security cases.
-
-### Run all tests
-
-```bash
-python -m pytest -v
-```
-
-### Run the AI attack suite
-
-```bash
-python -m tests.ai_attack_suite
-```
-
-### Run the advanced attack tests
-
-```bash
-python -m tests.advanced_attack_tests
-```
+The project also contains separate attack-testing scripts for testing security controls against different types of malicious or suspicious input.
 
 ---
 
-## GitHub Actions
+## Technology Stack
 
-The project uses GitHub Actions to run the automated test suite.
-
-The workflow is located at:
-
-```text
-.github/workflows/security-tests.yml
-```
-
-It runs when code is pushed to `master` or when a pull request is created for the `master` branch.
-
----
-
-## Technology Used
-
-| Technology | Used for |
+| Technology | Purpose |
 |---|---|
 | Python | Main programming language |
-| Flask | API and web application |
-| Ollama | Running the AI model locally |
-| Qwen3 4B | Local AI model |
+| Flask | Web application and API |
+| Ollama | Local AI model runtime |
+| Qwen3 4B | Local language model |
 | Flask-Limiter | Rate limiting |
-| Pytest | Testing |
-| HTML / CSS / JavaScript | Security dashboard |
+| Pytest | Automated testing |
+| HTML | Dashboard structure |
+| CSS | Dashboard styling |
+| JavaScript | Dashboard functionality |
 | Git | Version control |
-| GitHub Actions | Automated testing |
+| GitHub Actions | Automated security testing |
 
 ---
 
@@ -335,42 +420,57 @@ AI-Security-Lab/
 
 ---
 
-## Setup
+## Requirements
 
-### Requirements
-
-You need:
+Before running the project, make sure the following are installed:
 
 - Python 3.14
 - Ollama
 - Git
 
-### Clone the project
+### Supported Operating Systems
+
+The project can be used on:
+
+- Windows
+- Linux
+- macOS
+
+---
+
+## Local Setup
+
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/Rxnveer0x/AI-Security-Lab.git
+```
+
+```bash
 cd AI-Security-Lab
 ```
 
-### Create a virtual environment
+### 2. Create a Virtual Environment
 
 ```bash
 python -m venv .venv
 ```
 
-### Windows PowerShell
+### 3. Activate the Virtual Environment
+
+#### Windows PowerShell
 
 ```powershell
 .venv\Scripts\Activate.ps1
 ```
 
-### Linux / macOS
+#### Linux / macOS
 
 ```bash
 source .venv/bin/activate
 ```
 
-### Install dependencies
+### 4. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -378,31 +478,27 @@ pip install -r requirements.txt
 
 ---
 
-## Ollama
+## Ollama Setup
 
-Install Ollama and make sure it is running.
+Install **Ollama** and make sure it is running.
 
-Pull the model:
+### Pull the AI Model
 
 ```bash
 ollama pull qwen3:4b
 ```
 
-Check that it is installed:
+### Verify the Model
 
 ```bash
 ollama list
 ```
 
-You should see:
-
-```text
-qwen3:4b
-```
+The `qwen3:4b` model should appear in the list.
 
 ---
 
-## Run the Project
+## Run the Application
 
 Start the Flask application:
 
@@ -410,15 +506,66 @@ Start the Flask application:
 python -m app.main
 ```
 
-Then open:
+The application runs locally at:
 
 ```text
 http://127.0.0.1:5000
 ```
 
+Open the address in a browser to use the application.
+
 ---
 
-## Reports
+## Run Security Tests
+
+### Complete Test Suite
+
+Run the complete automated test suite with:
+
+```bash
+python -m pytest -v
+```
+
+The current verified result is:
+
+```text
+44 passed in 2.44s
+```
+
+### AI Attack Suite
+
+```bash
+python -m tests.ai_attack_suite
+```
+
+### Advanced Attack Tests
+
+```bash
+python -m tests.advanced_attack_tests
+```
+
+---
+
+## GitHub Actions
+
+The project includes a GitHub Actions workflow for running the security tests automatically.
+
+The workflow runs when:
+
+- Code is pushed to the `master` branch
+- A pull request is created for the `master` branch
+
+### Workflow File
+
+```text
+.github/workflows/security-tests.yml
+```
+
+The workflow installs the project dependencies and runs the pytest suite.
+
+---
+
+## Security Reports
 
 Security reports and attack-test results are stored in:
 
@@ -426,48 +573,109 @@ Security reports and attack-test results are stored in:
 data/reports/
 ```
 
-The application also records security events with information such as:
+The project can generate reports containing information about security events and attack-test results.
+
+---
+
+## Security Event Monitoring
+
+Security events are recorded with information such as:
 
 - Timestamp
 - Event type
 - Message
 - Risk level
-- Metadata
+- Security metadata
 
-These events are displayed in the dashboard.
+These events can then be viewed through the dashboard.
+
+### Event Management
+
+The dashboard provides:
+
+- Event filtering
+- Event pagination
+- Event details
+- JSON export
+- CSV export
+- Security report generation
 
 ---
 
-## Why I Built This
+## Security Controls
 
-I wanted to learn more about AI security instead of only building a normal chatbot.
+The application has security controls at different stages of the AI request lifecycle.
 
-While working on the project, I focused on what happens around an AI model:
+### Input Security
 
 ```text
-Input
-  ↓
-Security Checks
-  ↓
-AI Model
-  ↓
-Output Checks
-  ↓
-Logging
+User Input
+    │
+    ├── Input Validation
+    ├── Prompt Injection Detection
+    ├── Jailbreak Detection
+    ├── PII Detection
+    ├── Risk Scoring
+    └── Rate Limiting
 ```
 
-This helped me work with concepts such as prompt injection, jailbreaks, PII protection, RAG security, tool security, and LLM output validation.
+### RAG and Tool Security
+
+```text
+Request
+   │
+   ├── RAG Security
+   │      ├── Document Processing
+   │      ├── Document Retrieval
+   │      └── RAG Injection Detection
+   │
+   └── Tool Security
+          ├── Tool Routing
+          ├── Input Validation
+          └── Unsafe Tool Blocking
+```
+
+### Output Security
+
+```text
+AI Response
+    │
+    ├── Output Validation
+    ├── PII Detection
+    └── Sensitive Output Detection
+```
 
 ---
 
-## What I Learned
+## Project Goal
 
-Through this project I practiced:
+I built this project to get practical experience with AI security.
+
+Instead of only creating a chatbot, I wanted to understand what security controls can be placed around an AI application.
+
+The project focuses on:
+
+- LLM security
+- Prompt injection
+- Jailbreak detection
+- PII protection
+- RAG security
+- Tool security
+- Output security
+- Security monitoring
+- Automated security testing
+
+---
+
+## Learning Focus
+
+While working on the project, I practiced:
 
 - Python
 - Flask
-- Working with local LLMs
-- Prompt injection detection
+- Local LLM integration
+- AI application security
+- Prompt injection defense
 - Jailbreak detection
 - PII detection
 - Risk scoring
@@ -475,8 +683,8 @@ Through this project I practiced:
 - Tool validation
 - Output security
 - Security logging
-- Building a security dashboard
-- Writing automated tests
+- Security monitoring
+- Automated testing
 - Git and GitHub
 - GitHub Actions
 
@@ -486,5 +694,10 @@ Through this project I practiced:
 
 **Ranveer Singh**
 
-GitHub:  
+---
+
+## GitHub
+
+**Repository:**
+
 https://github.com/Rxnveer0x/AI-Security-Lab
